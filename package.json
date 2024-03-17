@@ -1,22 +1,26 @@
 {
   "name": "koishi-plugin-isolate",
-  "description": "Create isolated context for plugin",
-  "version": "0.0.1",
+  "description": "Create isolated context for plugin group",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
+  "author": "Hieuzest <girkirin@hotmail.com>",
   "license": "MIT",
-  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koikirin/koishi-plugin-isolate.git"
+  },
+  "homepage": "https://github.com/koikirin/koishi-plugin-isolate",
   "keywords": [
     "chatbot",
     "koishi",
     "plugin"
   ],
-  "devDependencies": {},
   "peerDependencies": {
-    "koishi": "^4.17.2"
+    "koishi": "^4.17.1"
   }
 }
