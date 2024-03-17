@@ -1,17 +1,16 @@
 import { Context, Schema } from 'koishi'
 
 export const name = 'isolate'
-
 export const filter = false
-
 export const reusable = true
+export const usage = '启用本插件将会以隔离模式启用本插件组内所有为启用插件，请勿手动操作其余插件，使用此插件同一开关。'
 
 export interface Config {
   isolatedServices: string[]
 }
 
 export const Config: Schema<Config> = Schema.object({
-  isolatedServices: Schema.array(String).role('table').default([]),
+  isolatedServices: Schema.array(String).role('table').description('要隔离的服务。').default([]),
 })
 
 const kRecord = Symbol.for('koishi.loader.record')
