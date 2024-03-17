@@ -3,7 +3,7 @@ import { Context, Schema } from 'koishi'
 export const name = 'isolate'
 export const filter = false
 export const reusable = true
-export const usage = '启用本插件将会以隔离模式启用本插件组内所有为启用插件，请勿手动操作其余插件，使用此插件同一开关。'
+export const usage = '启用本插件将会以隔离模式启用本插件组内所有未启用插件，请勿手动操作其余插件，使用此插件统一开关。'
 
 export interface Config {
   isolatedServices: string[]
@@ -21,7 +21,7 @@ export function apply(_ctx: Context, _config: Config) {
 
   let ctx = _ctx
   _config.isolatedServices.forEach(name => ctx = ctx.isolate(name))
-  ctx.scope[kRecord] = ctx.root.scope[kRecord]
+  ctx.scope[kRecord] = Object.create(null)
 
   disabled.forEach(key => {
     _ctx.logger.info('apply isolated plugin %c', key.slice(1))
