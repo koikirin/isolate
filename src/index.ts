@@ -1,4 +1,5 @@
-import { Context, Schema } from 'koishi'
+import { Context, isNullable, Schema } from 'koishi'
+import { } from '@koishijs/plugin-proxy-agent'
 
 export const name = 'isolate'
 export const filter = false
@@ -7,10 +8,12 @@ export const usage = '启用本插件将会以隔离模式启用本插件组内�
 
 export interface Config {
   isolatedServices: string[]
+  proxyAgent?: string
 }
 
 export const Config: Schema<Config> = Schema.object({
   isolatedServices: Schema.array(String).role('table').description('要隔离的服务。').default([]),
+  proxyAgent: Schema.string().description('代理地址。'),
 })
 
 const kRecord = Symbol.for('koishi.loader.record')
@@ -19,7 +22,7 @@ export function apply(_ctx: Context, _config: Config) {
   const config = _ctx.scope.parent.config
   const disabled = Object.keys(config).filter(key => key.startsWith('~') && !key.startsWith('~isolate:'))
 
-  let ctx = _ctx
+  let ctx = isNullable(_config.proxyAgent) ? _ctx : _ctx.intercept('http', { proxyAgent: _config.proxyAgent })
   _config.isolatedServices.forEach(name => ctx = ctx.isolate(name))
   ctx.scope[kRecord] = Object.create(null)
 
