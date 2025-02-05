@@ -28,6 +28,19 @@ export function apply(_ctx: Context, _config: Config) {
 
   disabled.forEach(key => {
     _ctx.logger.info('apply isolated plugin %c', key.slice(1))
-    ctx.loader.reload(ctx, key.slice(1), config[key])
+    const reload = () => ctx.loader.reload(ctx, key.slice(1), ctx.scope.parent.config[key]).then(fork => {
+      return _ctx.scope.parent.scope[kRecord][key.slice(1)] = new Proxy(fork, {
+        get(target, prop) {
+          if (prop === 'dispose') {
+            return async () => {
+              await Promise.resolve()
+              return reload()
+            }
+          }
+          return Reflect.get(target, prop)
+        },
+      })
+    })
+    reload()
   })
 }
